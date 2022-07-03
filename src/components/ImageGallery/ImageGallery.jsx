@@ -11,22 +11,16 @@ export default class ImageGallery extends Component {
   totalHits = null;
 
   componentDidUpdate(prevProps, prevState) {
-    if (
-      prevProps.search !== this.props.search ||
-      prevProps.currentPage !== this.props.currentPage
-    ) {
+    const { search, currentPage, isLoading, loadMoreStatus } = this.props;
+    if (prevProps.search !== search || prevProps.currentPage !== currentPage) {
       this.props.isLoading(true);
-      fetchPixabay(
-        this.props.search,
-        this.props.currentPage,
-        this.setData,
-        this.props.isLoading
-      ).finally(() => this.props.isLoading(false));
+      fetchPixabay(search, currentPage, this.setData);
     }
     if (prevState.data !== this.state.data) {
       this.state.data.length >= this.totalHits
-        ? this.props.loadMoreStatus(false)
-        : this.props.loadMoreStatus(true);
+        ? loadMoreStatus(false)
+        : loadMoreStatus(true);
+      setTimeout(() => isLoading(false), 1000);
     }
   }
 
@@ -43,9 +37,19 @@ export default class ImageGallery extends Component {
     });
   };
 
+  onClick = event => {
+    if (event.target.tagName === 'IMG') {
+      const largeImageUrl = event.target.dataset.largeimageurl;
+      const imageTitle = event.target.alt;
+      this.props.setDataForModal(largeImageUrl, imageTitle);
+      this.props.isModalOpen(true);
+      document.addEventListener('keydown', this.props.onKeyDown);
+    }
+  };
+
   render() {
     return (
-      <GalleryStyled>
+      <GalleryStyled onClick={this.onClick}>
         {this.state.data.length > 0 &&
           this.state.data.map(item => {
             return <ImageGalleryItem key={item.id} item={item} />;

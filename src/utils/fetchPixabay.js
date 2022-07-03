@@ -4,9 +4,7 @@ export function fetchPixabay(query, currentPage, setData) {
   return fetch(
     `https://pixabay.com/api/?q=${query}&page=${currentPage}&key=${KEY}&image_type=photo&orientation=horizontal&per_page=12`
   )
-    .then(response => {
-      return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
       setData(data);
     });

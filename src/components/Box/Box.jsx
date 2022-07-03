@@ -1,3 +1,5 @@
-export default function Box() {
-  return <div class="box"></div>;
+import { StyledBox } from './Box.styled';
+
+export default function Box({ children }) {
+  return <StyledBox>{children}</StyledBox>;
 }
