@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Overlay, ModalStyled, ImageStyled } from './Modal.styled';
 
 export default class Modal extends Component {
@@ -13,13 +14,20 @@ export default class Modal extends Component {
   };
 
   render() {
-    console.log('this.props.src', this.props.src);
+    const { src, alt } = this.props;
     return (
       <Overlay onClick={this.onClick}>
         <ModalStyled>
-          <ImageStyled src={this.props.src} alt={this.props.alt} />
+          <ImageStyled src={src} alt={alt} />
         </ModalStyled>
       </Overlay>
     );
   }
 }
+
+Modal.propTypes = {
+  isModalOpen: PropTypes.func.isRequired,
+  onKeyDown: PropTypes.func.isRequired,
+  src: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+};

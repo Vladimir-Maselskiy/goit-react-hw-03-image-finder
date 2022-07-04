@@ -18,6 +18,7 @@ export class App extends Component {
     imageTitle: '',
     largeImageUrl: '',
   };
+
   onSubmit = event => {
     event.preventDefault();
     this.setState({ currentPage: 1 });
@@ -48,7 +49,7 @@ export class App extends Component {
   };
 
   setDataForModal = (src, imageTitle) => {
-    this.setState({ imageTitle: imageTitle, largeImageUrl: src });
+    this.setState({ largeImageUrl: src, imageTitle });
   };
 
   render() {
