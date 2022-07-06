@@ -7,6 +7,7 @@ import { AppStyled } from './App.styled';
 import { Bars } from 'react-loader-spinner';
 import Box from 'components/Box/Box';
 import Modal from 'components/Modal/Modal';
+import { fetchPixabay } from 'utils/fetchPixabay';
 
 export class App extends Component {
   state = {
@@ -17,6 +18,38 @@ export class App extends Component {
     isModalOpen: false,
     imageTitle: '',
     largeImageUrl: '',
+    data: [],
+  };
+
+  totalHits = null;
+
+  componentDidUpdate(_, prevState) {
+    const { search, currentPage } = this.state;
+    if (prevState.search !== search || prevState.currentPage !== currentPage) {
+      this.isLoading(true);
+      fetchPixabay(search.trim(), currentPage, this.setData).finally(() => {
+        this.isLoading(false);
+      });
+    }
+
+    if (prevState.data !== this.state.data) {
+      this.state.data.length >= this.totalHits
+        ? this.loadMoreStatus(false)
+        : this.loadMoreStatus(true);
+    }
+  }
+
+  setData = newData => {
+    this.totalHits = newData.totalHits;
+
+    this.setState(state => {
+      if (this.state.currentPage === 1) {
+        return { data: newData.hits };
+      }
+      return {
+        data: [...state.data, ...newData.hits],
+      };
+    });
   };
 
   onSubmit = event => {
@@ -54,26 +87,22 @@ export class App extends Component {
 
   render() {
     const {
-      search,
-      currentPage,
       loadMoreStatus,
       isLoading,
       isModalOpen,
       largeImageUrl,
       imageTitle,
+      data,
     } = this.state;
 
     return (
       <AppStyled>
         <Searchbar onSubmit={this.onSubmit} />
         <ImageGallery
-          search={search}
-          currentPage={currentPage}
-          loadMoreStatus={this.loadMoreStatus}
-          isLoading={this.isLoading}
           isModalOpen={this.isModalOpen}
-          onKeyDown={this.onKeyDown}
           setDataForModal={this.setDataForModal}
+          onKeyDown={this.onKeyDown}
+          data={data}
         />
         {loadMoreStatus && (
           <Button onLoadMoreButtonClick={this.onLoadMoreButtonClick} />
