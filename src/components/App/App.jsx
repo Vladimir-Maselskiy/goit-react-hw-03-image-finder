@@ -25,7 +25,10 @@ export class App extends Component {
 
   componentDidUpdate(_, prevState) {
     const { search, currentPage } = this.state;
-    if (prevState.search !== search || prevState.currentPage !== currentPage) {
+    if (
+      (prevState.search !== search || prevState.currentPage !== currentPage) &&
+      search.trim()
+    ) {
       this.isLoading(true);
       fetchPixabay(search.trim(), currentPage, this.setData).finally(() => {
         this.isLoading(false);
