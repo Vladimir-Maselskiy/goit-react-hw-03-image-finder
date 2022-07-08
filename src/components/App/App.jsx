@@ -5,9 +5,11 @@ import { Component } from 'react';
 import Searchbar from '../Searchbar/Searchbar';
 import { AppStyled } from './App.styled';
 import { Bars } from 'react-loader-spinner';
+// import { ImageStyled } from ".components/M";
 import Box from 'components/Box/Box';
 import Modal from 'components/Modal/Modal';
 import { fetchPixabay } from 'utils/fetchPixabay';
+import { ImageStyled } from 'components/Modal/Modal.styled';
 
 export class App extends Component {
   state = {
@@ -77,13 +79,6 @@ export class App extends Component {
     this.setState({ isModalOpen: status });
   };
 
-  onKeyDown = event => {
-    console.log('onKeyDown');
-    if (event.key === 'Escape') {
-      this.isModalOpen(false);
-    }
-  };
-
   setDataForModal = (src, imageTitle) => {
     this.setState({ largeImageUrl: src, imageTitle });
   };
@@ -104,7 +99,6 @@ export class App extends Component {
         <ImageGallery
           isModalOpen={this.isModalOpen}
           setDataForModal={this.setDataForModal}
-          onKeyDown={this.onKeyDown}
           data={data}
         />
         {loadMoreStatus && (
@@ -118,12 +112,9 @@ export class App extends Component {
         )}
 
         {isModalOpen && (
-          <Modal
-            src={largeImageUrl}
-            alt={imageTitle}
-            isModalOpen={this.isModalOpen}
-            onKeyDown={this.onKeyDown}
-          />
+          <Modal isModalOpen={this.isModalOpen}>
+            <ImageStyled src={largeImageUrl} alt={imageTitle} />
+          </Modal>
         )}
       </AppStyled>
     );

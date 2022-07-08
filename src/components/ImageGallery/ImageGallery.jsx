@@ -3,14 +3,13 @@ import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import { GalleryStyled } from './ImageGallery.styled';
 
 export default function ImageGallery(props) {
-  const { setDataForModal, isModalOpen, onKeyDown, data } = props;
+  const { setDataForModal, isModalOpen, data } = props;
   function onClick(event) {
     if (event.target.tagName === 'IMG') {
       const largeImageUrl = event.target.dataset.largeimageurl;
       const imageTitle = event.target.alt;
       setDataForModal(largeImageUrl, imageTitle);
       isModalOpen(true);
-      document.addEventListener('keydown', onKeyDown);
     }
   }
 
@@ -27,6 +26,5 @@ export default function ImageGallery(props) {
 ImageGallery.propTypes = {
   isModalOpen: PropTypes.func.isRequired,
   setDataForModal: PropTypes.func.isRequired,
-  onKeyDown: PropTypes.func.isRequired,
   data: PropTypes.array.isRequired,
 };

@@ -1,11 +1,22 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Overlay, ModalStyled, ImageStyled } from './Modal.styled';
+import { Overlay, ModalStyled } from './Modal.styled';
 
 export default class Modal extends Component {
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.props.onKeyDown);
+  componentDidMount() {
+    window.addEventListener('keydown', this.onKeyDown);
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onKeyDown);
+  }
+
+  onKeyDown = event => {
+    console.log('onKeyDown');
+    if (event.key === 'Escape') {
+      this.isModalOpen(false);
+    }
+  };
 
   onClick = event => {
     if (event.target === event.currentTarget) {
@@ -14,12 +25,10 @@ export default class Modal extends Component {
   };
 
   render() {
-    const { src, alt } = this.props;
+    // const { src, alt } = this.props;
     return (
       <Overlay onClick={this.onClick}>
-        <ModalStyled>
-          <ImageStyled src={src} alt={alt} />
-        </ModalStyled>
+        <ModalStyled>{this.props.children}</ModalStyled>
       </Overlay>
     );
   }
@@ -27,7 +36,4 @@ export default class Modal extends Component {
 
 Modal.propTypes = {
   isModalOpen: PropTypes.func.isRequired,
-  onKeyDown: PropTypes.func.isRequired,
-  src: PropTypes.string.isRequired,
-  alt: PropTypes.string.isRequired,
 };
